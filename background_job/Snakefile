@@ -1,0 +1,35 @@
+
+rule all:
+    """
+    count the number of files that created so far by a job running in the background.
+    """
+    input: 
+        'results/num_files'
+
+checkpoint bg:
+    """
+    This rule starts a background jobs that creates a new file every 5 seconds.    
+    Note, that the output is touched after each iteration so that we can continue executing the pipeline
+    """
+    output:
+        'results/done'
+    shell:
+        """
+        bash scripts/inf_loop.sh&
+        sleep 1
+        touch {output}
+        """
+
+def get_files(**wildcards):
+    import glob
+    with open(checkpoints.bg.get(**wildcards).output[0], 'r') as f:
+        files = glob.glob("results/file_*")
+    return files
+
+rule count_files:
+    input: lambda wildcards: get_files(**wildcards)
+    output:
+        'results/num_files'
+    run:
+        with open(output[0], 'w') as f:
+            print(len(input), file=f)
