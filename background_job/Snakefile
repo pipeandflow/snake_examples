@@ -15,7 +15,7 @@ checkpoint bg:
         'results/done'
     shell:
         """
-        bash scripts/inf_loop.sh&
+        bash scripts/inf_loop.sh {output}&
         sleep 1
         touch {output}
         """

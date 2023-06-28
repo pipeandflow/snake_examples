@@ -1,8 +1,18 @@
 #! /bin/bash
 set -x
 
+guard=$1
+if [[ ! -f $guard ]]; then
+    # ensure that the guard is in place
+    touch $guard
+fi
+
 let i=0
 while true; do
+    if [[ ! -f $guard ]]; then
+        # The guard file was removed. We should break the loop
+        exit 0
+    fi
     touch results/file_$i
     let i=$i+1
     sleep 5
