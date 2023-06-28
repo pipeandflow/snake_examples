@@ -5,6 +5,8 @@ guard=$1
 if [[ ! -f $guard ]]; then
     # ensure that the guard is in place
     touch $guard
+else
+    exit 0
 fi
 
 let i=0
