@@ -1,7 +1,9 @@
 #! /bin/bash
 set -x
 
-guard=$1
+origdir=$1
+cd $origdir
+guard=$2
 if [[ ! -f $guard ]]; then
     # ensure that the guard is in place
     touch $guard

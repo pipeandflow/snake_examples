@@ -1,3 +1,7 @@
+configfile: 'config.yaml'
+print(config)
+
+localrules: all, bg, count_files
 
 rule all:
     """
@@ -13,9 +17,11 @@ checkpoint bg:
     """
     output:
         'results/done'
+    params:
+        queue = config['queue']
     shell:
         """
-        bash scripts/inf_loop.sh {output}&
+        qsub -q {params.queue} -l nodes=1:ncpus=1 -- /usr/bin/bash `pwd`/scripts/inf_loop.sh `pwd` {output}
         sleep 1
         touch {output}
         """
